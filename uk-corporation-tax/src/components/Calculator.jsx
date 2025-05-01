@@ -10,7 +10,6 @@ function Calculator() {
     const number = parseFloat(value.replace(/[^0-9.]/g, ''))
     if (isNaN(number)) return ''
     
-    // Yazarken decimal kontrolü
     const hasDecimal = value.includes('.')
     const decimalDigits = hasDecimal ? value.split('.')[1]?.length || 0 : 0
     
@@ -32,7 +31,6 @@ function Calculator() {
     }
   }
 
-  // Aşağıdaki tüm fonksiyonlar ve JSX aynı kalıyor //
   const resetForm = () => {
     setForm({ revenue: '', expenses: '', capital: '', rdTaxCredits: '' })
     setResult('Enter values to calculate tax')
@@ -69,7 +67,7 @@ function Calculator() {
 
     setResult(
       <>
-        <div className="text-[#4e54c8] font-bold text-lg">
+        <div className="text-sky-600 font-bold text-lg">
           Tax Owed: £{tax.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </div>
         <div className="text-sm text-gray-600 mt-1">
@@ -83,15 +81,35 @@ function Calculator() {
 
   return (
     <div className="p-8 border-b border-gray-200">
-      <h1 className="text-2xl font-bold mb-6 text-[#4e54c8] text-center">UK Corporation Tax Calculator</h1>
+      <h1 className="text-2xl font-bold mb-6 text-sky-600 text-center">UK Corporation Tax Calculator</h1>
 
       <div className="space-y-4">
         {[
-          { id: 'revenue', label: 'Annual Revenue (£)', tooltip: 'Total company income before deductions' },
-          { id: 'expenses', label: 'Allowable Expenses (£)', tooltip: 'Day-to-day running costs' },
-          { id: 'capital', label: 'Capital Allowances (£)', tooltip: 'Deductions for capital assets' },
-          { id: 'rdTaxCredits', label: 'R&D Tax Credits (£)', tooltip: 'Tax relief for R&D expenditure' },
-        ].map(({ id, label, tooltip }) => (
+          { 
+            id: 'revenue', 
+            label: 'Annual Revenue (£)', 
+            tooltip: 'Total company income before deductions',
+            placeholder: 'e.g., 100,000.00'
+          },
+          { 
+            id: 'expenses', 
+            label: 'Allowable Expenses (£)', 
+            tooltip: 'Day-to-day running costs',
+            placeholder: 'e.g., 30,000.00'
+          },
+          { 
+            id: 'capital', 
+            label: 'Capital Allowances (£)', 
+            tooltip: 'Deductions for capital assets',
+            placeholder: 'e.g., 5,000'
+          },
+          { 
+            id: 'rdTaxCredits', 
+            label: 'R&D Tax Credits (£)', 
+            tooltip: 'Tax relief for R&D expenditure',
+            placeholder: 'e.g., 2,000'
+          },
+        ].map(({ id, label, tooltip, placeholder }) => (
           <div key={id}>
             <div className="flex items-center gap-2 mb-1">
               <label htmlFor={id} className="block text-sm font-medium text-gray-700">{label}</label>
@@ -104,14 +122,14 @@ function Calculator() {
               onChange={handleChange}
               onBlur={handleBlur}
               className={inputStyle}
-              placeholder={`e.g., ${id === 'revenue' ? '100,000.00' : '30,000.00'}`}
+              placeholder={placeholder}
               inputMode="decimal"
             />
           </div>
         ))}
 
         <div className="flex gap-4">
-          <button onClick={calculateTax} className="flex-1 bg-[#4e54c8] text-white py-3 rounded-lg font-semibold hover:bg-[#3b40a4] transition-colors">
+          <button onClick={calculateTax} className="flex-1 bg-sky-600 text-white py-3 rounded-lg font-semibold hover:bg-sky-500 transition-colors duration-150 ease-in">
             Calculate Tax
           </button>
           <button onClick={resetForm} className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
