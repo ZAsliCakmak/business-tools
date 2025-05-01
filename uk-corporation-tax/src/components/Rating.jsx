@@ -40,15 +40,13 @@ function Rating() {
                   type="button"
                   className={`text-3xl cursor-pointer transition-all duration-200 rounded-full p-1 ${
                     (hover || rating) >= star ? 'text-yellow-500' : 'text-gray-300'
-                  } hover:scale-125 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2`}
+                  } hover:scale-125 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 active:ring-2 active:ring-yellow-400`}
                   onMouseEnter={() => setHover(star)}
                   onMouseLeave={() => setHover(0)}
                   onTouchStart={() => setHover(star)}
                   onTouchEnd={() => setHover(0)}
                   onClick={() => handleRating(star)}
                   aria-label={`Rate ${star} star${star !== 1 ? 's' : ''}`}
-                  // Klavye erişilebilirliğini devre dışı bırakıyoruz:
-                  tabIndex="-1"
                 >
                   ★
                 </button>
@@ -104,6 +102,13 @@ function Rating() {
         }
         .animate-float {
           animation: float 1s ease-in-out infinite;
+        }
+
+        /* Mobilde tıklanınca focus ring görselinde göstermek için */
+        button.active-ring-on-touch:focus,
+        button.active-ring-on-touch:active {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.5); /* tailwind'deki ring-yellow-400 */
         }
       `}</style>
     </div>
