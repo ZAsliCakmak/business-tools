@@ -6,14 +6,22 @@ function Rating() {
   const [showFeedback, setShowFeedback] = useState(false);
   const longPressTimer = useRef(null);
 
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   const handleRating = (star) => {
     setRating(star);
+
+    // ❗ ZAMANLAMA DÜZENLENDİ: Feedback'i hemen göster
     setShowFeedback(true);
 
-   
-    setTimeout(() => {
+    // Trustpilot yönlendirme
+    if (isMobile) {
       window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-    }, 1200);
+    } else {
+      setTimeout(() => {
+        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+      }, 1200);
+    }
   };
 
   const handleTouchStart = (star) => {
