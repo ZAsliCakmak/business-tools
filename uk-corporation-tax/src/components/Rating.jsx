@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function Rating() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
+  const linkRef = useRef(null);
 
   const handleRating = (star) => {
     setRating(star);
     setShowFeedback(true);
-  };
 
-  useEffect(() => {
-    if (showFeedback) {
-      const timer = setTimeout(() => {
-        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-      }, 1200);
-      return () => clearTimeout(timer);
-    }
-  }, [showFeedback]);
+    setTimeout(() => {
+      if (linkRef.current) {
+        linkRef.current.click();
+      }
+    }, 1000); // 1 saniye bekle
+  };
 
   return (
     <div className="bg-gray-50 p-8">
@@ -74,6 +72,17 @@ function Rating() {
           </div>
         )}
       </div>
+
+      {/* Gizli bağlantı, otomatik tıklanacak */}
+      <a
+        href="https://www.trustpilot.com/evaluate/startxpress.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        ref={linkRef}
+        style={{ display: 'none' }}
+      >
+        Trustpilot
+      </a>
 
       <style jsx global>{`
         @keyframes slide-up {
