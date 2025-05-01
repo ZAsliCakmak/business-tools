@@ -13,7 +13,8 @@ function Rating() {
   useEffect(() => {
     if (showFeedback) {
       const timer = setTimeout(() => {
-        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+        // Yeni pencere açmak yerine mevcut sekmede yönlendirme yapıyoruz
+        window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
       }, 1200);
       return () => clearTimeout(timer);
     }
@@ -21,7 +22,7 @@ function Rating() {
 
   return (
     <div className="bg-gray-50 p-8">
-      <div className="relative overflow-hidden rounded-xl text-center h-[150px]">
+      <div className="relative overflow-hidden rounded-xl text-center h-[264px]">
         {!showFeedback ? (
           <div className="transition-all duration-300 h-full flex flex-col items-center justify-center">
             <div className="mb-6">
@@ -30,7 +31,7 @@ function Rating() {
               </h3>
               <p className="text-gray-500 text-sm">Your feedback helps us improve</p>
             </div>
-            <div className="flex justify-center gap-4 mb-4" role="radiogroup">
+            <div className="flex justify-center gap-2 mb-4" role="radiogroup">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -49,11 +50,11 @@ function Rating() {
             </div>
           </div>
         ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-xl animate-slide-up">
-            <div className="animate-float mb-3">
-              <div className="w-9 h-9 bg-green-600 rounded-full flex items-center justify-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-xl p-8">
+            <div className="animate-bounce mb-3">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
                 <svg 
-                  className="w-6 h-6 text-white" 
+                  className="w-8 h-8 text-white" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -62,7 +63,7 @@ function Rating() {
                   <path 
                     strokeLinecap="round" 
                     strokeLinejoin="round" 
-                    strokeWidth={4} 
+                    strokeWidth={3} 
                     d="M5 13l4 4L19 7" 
                   />
                 </svg>
@@ -72,33 +73,6 @@ function Rating() {
           </div>
         )}
       </div>
-
-      <style jsx global>{`
-        @keyframes slide-up {
-          0% {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          100% {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-7px);
-          }
-        }
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out forwards;
-        }
-        .animate-float {
-          animation: float 1.2s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }
