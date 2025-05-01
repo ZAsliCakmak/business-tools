@@ -13,7 +13,6 @@ function Rating() {
   useEffect(() => {
     if (showFeedback) {
       const timer = setTimeout(() => {
-        // window.open yerine window.location.href kullanıyoruz
         window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
       }, 1200);
       return () => clearTimeout(timer);
