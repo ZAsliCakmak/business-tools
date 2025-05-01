@@ -10,21 +10,16 @@ function Rating() {
 
   const handleRating = (star) => {
     setRating(star);
-
-    // ❗ ZAMANLAMA DÜZENLENDİ: Feedback'i hemen göster
     setShowFeedback(true);
 
-    // Trustpilot yönlendirme
-    if (isMobile) {
+   
+    setTimeout(() => {
       window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-    } else {
-      setTimeout(() => {
-        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-      }, 1200);
-    }
+    }, 1200);
   };
 
   const handleTouchStart = (star) => {
+    setHover(star); 
     longPressTimer.current = setTimeout(() => {
       handleRating(star);
     }, 500);
@@ -35,6 +30,7 @@ function Rating() {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
+    setHover(0); 
   };
 
   useEffect(() => {
@@ -123,6 +119,12 @@ function Rating() {
         }
         .animate-float {
           animation: float 1.2s ease-in-out infinite;
+        }
+
+        /* Mobilde dokunmatik vurgu için */
+        button:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.5); /* focus ring benzeri efekt */
         }
       `}</style>
     </div>
