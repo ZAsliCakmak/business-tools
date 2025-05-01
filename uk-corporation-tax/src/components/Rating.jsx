@@ -6,19 +6,23 @@ function Rating() {
   const [showFeedback, setShowFeedback] = useState(false);
 
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent); // Yalnızca iOS cihazlar
 
   const handleRating = (star) => {
     setRating(star);
     setShowFeedback(true);
 
-    if (isMobile) {
-      setTimeout(() => {
-        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-      }, 1200);
+    // Eğer iOS cihazsa hemen aç, diğer mobil cihazlar için 1200ms bekle
+    const redirect = () => {
+      window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+    };
+
+    if (isIOS) {
+      redirect(); // Hemen yönlendir
+    } else if (isMobile) {
+      setTimeout(redirect, 1200); // Diğer mobil cihazlar için 1200ms
     } else {
-      setTimeout(() => {
-        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-      }, 1200);
+      setTimeout(redirect, 1200); // Masaüstü için 1200ms
     }
   };
 
@@ -102,13 +106,6 @@ function Rating() {
         }
         .animate-float {
           animation: float 1s ease-in-out infinite;
-        }
-
-        /* Mobilde tıklanınca focus ring görselinde göstermek için */
-        button.active-ring-on-touch:focus,
-        button.active-ring-on-touch:active {
-          outline: none;
-          box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.5); /* tailwind'deki ring-yellow-400 */
         }
       `}</style>
     </div>
