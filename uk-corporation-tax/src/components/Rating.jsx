@@ -1,54 +1,26 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 function Rating() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
-  const longPressTimer = useRef(null);
-  const feedbackTimeout = useRef(null);
 
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const handleRating = (star) => {
     setRating(star);
+    setShowFeedback(true);
 
-    // Clear any previous timeout
-    if (feedbackTimeout.current) clearTimeout(feedbackTimeout.current);
-
-    // Delay showing feedback to allow visual effect
-    feedbackTimeout.current = setTimeout(() => {
-      setShowFeedback(true);
-    }, 300);
-
-    // Open Trustpilot link
     if (isMobile) {
-      window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+      setTimeout(() => {
+        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+      }, 1200);
     } else {
       setTimeout(() => {
         window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
       }, 1200);
     }
   };
-
-  const handleTouchStart = (star) => {
-    longPressTimer.current = setTimeout(() => {
-      handleRating(star);
-    }, 500);
-  };
-
-  const handleTouchEnd = () => {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (feedbackTimeout.current) clearTimeout(feedbackTimeout.current);
-      if (longPressTimer.current) clearTimeout(longPressTimer.current);
-    };
-  }, []);
 
   return (
     <div className="bg-gray-50 p-8">
@@ -61,20 +33,22 @@ function Rating() {
               </h3>
               <p className="text-gray-500 text-sm">Your feedback helps us improve</p>
             </div>
-            <div className="flex justify-center gap-2 mb-4" role="radiogroup">
+            <div className="flex justify-center gap-4 mb-4" role="radiogroup">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
-                  className={`text-3xl cursor-pointer transition-all duration-200 rounded-full p-1
-                    ${(hover || rating) >= star ? 'text-yellow-500' : 'text-gray-300'}
-                    hover:scale-125 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2`}
+                  className={`text-3xl cursor-pointer transition-all duration-200 rounded-full p-1 ${
+                    (hover || rating) >= star ? 'text-yellow-500' : 'text-gray-300'
+                  } hover:scale-125 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2`}
                   onMouseEnter={() => setHover(star)}
                   onMouseLeave={() => setHover(0)}
-                  onTouchStart={() => handleTouchStart(star)}
-                  onTouchEnd={handleTouchEnd}
+                  onTouchStart={() => setHover(star)}
+                  onTouchEnd={() => setHover(0)}
                   onClick={() => handleRating(star)}
                   aria-label={`Rate ${star} star${star !== 1 ? 's' : ''}`}
+                  // Klavye erişilebilirliğini devre dışı bırakıyoruz:
+                  tabIndex="-1"
                 >
                   ★
                 </button>
@@ -122,14 +96,14 @@ function Rating() {
             transform: translateY(0);
           }
           50% {
-            transform: translateY(-7px);
+            transform: translateY(-6px);
           }
         }
         .animate-slide-up {
           animation: slide-up 0.3s ease-out forwards;
         }
         .animate-float {
-          animation: float 1.2s ease-in-out infinite;
+          animation: float 1s ease-in-out infinite;
         }
       `}</style>
     </div>
