@@ -33,7 +33,7 @@ function Rating() {
               </h3>
               <p className="text-gray-500 text-sm">Your feedback helps us improve</p>
             </div>
-            <div className="flex justify-center gap-4 mb-4" role="radiogroup">
+            <div className="flex justify-center gap-2 mb-4" role="radiogroup">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
