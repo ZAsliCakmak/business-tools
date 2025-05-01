@@ -4,20 +4,28 @@ function Rating() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const handleRating = (star) => {
     setRating(star);
     setShowFeedback(true);
+    setShouldRedirect(true);
   };
 
   useEffect(() => {
-    if (showFeedback) {
+    if (showFeedback && shouldRedirect) {
       const timer = setTimeout(() => {
-        window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
+        // Kullanıcı etkileşimiyle tetiklenen yeni sekme açma
+        const newWindow = window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+        if (!newWindow) {
+          // Pop-up engellendiğinde fallback olarak mevcut sekmede aç
+          window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
+        }
+        setShouldRedirect(false);
       }, 1200);
       return () => clearTimeout(timer);
     }
-  }, [showFeedback]);
+  }, [showFeedback, shouldRedirect]);
 
   return (
     <div className="bg-gray-50 p-8">
