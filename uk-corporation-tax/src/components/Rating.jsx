@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Rating() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const handleRating = (star) => {
     setRating(star);
     setShowFeedback(true);
+    setShouldRedirect(true);
   };
 
-  const handleTrustpilotRedirect = () => {
-    const newWindow = window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-    if (!newWindow) {
-      window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
+  useEffect(() => {
+    if (showFeedback && shouldRedirect) {
+      const timer = setTimeout(() => {
+        // iOS için özel yönlendirme çözümü
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+          // iOS'ta window.open çalışmayabilir, bu yüzden location.href kullanıyoruz
+          window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
+        } else {
+          const newWindow = window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+          if (!newWindow) {
+            window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
+          }
+        }
+        setShouldRedirect(false);
+      }, 1200);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [showFeedback, shouldRedirect]);
 
   return (
     <div className="bg-gray-50 p-8">
@@ -35,7 +50,7 @@ function Rating() {
                   type="button"
                   className={`text-3xl cursor-pointer transition-all duration-200 ${
                     (hover || rating) >= star ? 'text-yellow-500' : 'text-gray-300'
-                  } hover:scale-125 active:scale-150 focus:outline-none`}
+                  } hover:scale-125 active:scale-110 focus:outline-none`}
                   onMouseEnter={() => setHover(star)}
                   onMouseLeave={() => setHover(0)}
                   onClick={() => handleRating(star)}
@@ -66,13 +81,7 @@ function Rating() {
                 </svg>
               </div>
             </div>
-            <p className="text-gray-800 font-medium mb-4">Thank you for your feedback!</p>
-            <button
-              onClick={handleTrustpilotRedirect}
-              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-            >
-              Continue to Trustpilot
-            </button>
+            <p className="text-gray-800 font-medium">Thank you for your feedback!</p>
           </div>
         )}
       </div>
