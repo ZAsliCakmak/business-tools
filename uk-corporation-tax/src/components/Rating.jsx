@@ -5,25 +5,32 @@ function Rating() {
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const longPressTimer = useRef(null);
+  const feedbackTimeout = useRef(null);
+
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const handleRating = (star) => {
     setRating(star);
-    setShowFeedback(true);
 
-    setTimeout(() => {
+    // Clear any previous timeout
+    if (feedbackTimeout.current) clearTimeout(feedbackTimeout.current);
+
+    // Delay showing feedback to allow visual effect
+    feedbackTimeout.current = setTimeout(() => {
+      setShowFeedback(true);
+    }, 300);
+
+    // Open Trustpilot link
+    if (isMobile) {
       window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-    }, 1200);
+    } else {
+      setTimeout(() => {
+        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+      }, 1200);
+    }
   };
 
   const handleTouchStart = (star) => {
-    setHover(star);
-
-    // Butona aktif sınıfını ekle
-    const stars = document.querySelectorAll('.star');
-    stars.forEach((s, index) => {
-      s.classList.toggle('active', index < star);
-    });
-
     longPressTimer.current = setTimeout(() => {
       handleRating(star);
     }, 500);
@@ -34,15 +41,11 @@ function Rating() {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
-    setHover(0);
-
-    // Aktif sınıfları temizle
-    const stars = document.querySelectorAll('.star');
-    stars.forEach(s => s.classList.remove('active'));
   };
 
   useEffect(() => {
     return () => {
+      if (feedbackTimeout.current) clearTimeout(feedbackTimeout.current);
       if (longPressTimer.current) clearTimeout(longPressTimer.current);
     };
   }, []);
@@ -63,7 +66,7 @@ function Rating() {
                 <button
                   key={star}
                   type="button"
-                  className={`star text-3xl cursor-pointer transition-all duration-200 rounded-full p-1
+                  className={`text-3xl cursor-pointer transition-all duration-200 rounded-full p-1
                     ${(hover || rating) >= star ? 'text-yellow-500' : 'text-gray-300'}
                     hover:scale-125 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2`}
                   onMouseEnter={() => setHover(star)}
@@ -127,14 +130,6 @@ function Rating() {
         }
         .animate-float {
           animation: float 1.2s ease-in-out infinite;
-        }
-
-        /* Mobilde odak halkası benzeri efekt */
-        button:focus-visible,
-        button.active {
-          outline: none;
-          box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.5); /* Sarı odak halkası */
-          z-index: 10;
         }
       `}</style>
     </div>
