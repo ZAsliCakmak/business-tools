@@ -1,20 +1,25 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 function Rating() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
-  const linkRef = useRef(null);
+
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const handleRating = (star) => {
     setRating(star);
     setShowFeedback(true);
 
-    setTimeout(() => {
-      if (linkRef.current) {
-        linkRef.current.click();
-      }
-    }, 1000); // 1 saniye bekle
+    if (isMobile) {
+      // Mobil cihazsa anında yeni sekmede aç
+      window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+    } else {
+      // Masaüstünde 1.2 saniye sonra aç
+      setTimeout(() => {
+        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+      }, 1200);
+    }
   };
 
   return (
@@ -73,17 +78,6 @@ function Rating() {
         )}
       </div>
 
-      {/* Gizli bağlantı, otomatik tıklanacak */}
-      <a
-        href="https://www.trustpilot.com/evaluate/startxpress.io"
-        target="_blank"
-        rel="noopener noreferrer"
-        ref={linkRef}
-        style={{ display: 'none' }}
-      >
-        Trustpilot
-      </a>
-
       <style jsx global>{`
         @keyframes slide-up {
           0% {
@@ -96,8 +90,7 @@ function Rating() {
           }
         }
         @keyframes float {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateY(0);
           }
           50% {
