@@ -5,24 +5,26 @@ function Rating() {
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
 
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent); // Yalnızca iOS cihazlar
-
   const handleRating = (star) => {
     setRating(star);
     setShowFeedback(true);
 
-    // Eğer iOS cihazsa hemen aç, diğer mobil cihazlar için 1200ms bekle
+    // Tarayıcı tespiti
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isOnlySafariOnIOS = isIOS && isSafari;
+
+    // Trustpilot'a yönlendirme fonksiyonu
     const redirect = () => {
       window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
     };
 
-    if (isIOS) {
-      redirect(); // Hemen yönlendir
-    } else if (isMobile) {
-      setTimeout(redirect, 1200); // Diğer mobil cihazlar için 1200ms
+    if (isOnlySafariOnIOS) {
+      redirect(); // Safari + iOS → hemen yönlendir
+    } else if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      setTimeout(redirect, 1200); // Diğer mobil tarayıcılar → 1200ms bekle
     } else {
-      setTimeout(redirect, 1200); // Masaüstü için 1200ms
+      setTimeout(redirect, 1200); // Masaüstü → 1200ms bekle
     }
   };
 
