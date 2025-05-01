@@ -4,33 +4,20 @@ function Rating() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const handleRating = (star) => {
     setRating(star);
     setShowFeedback(true);
-    setShouldRedirect(true);
   };
 
   useEffect(() => {
-    if (showFeedback && shouldRedirect) {
+    if (showFeedback) {
       const timer = setTimeout(() => {
-        // iOS için özel yönlendirme çözümü
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if (isIOS) {
-          // iOS'ta window.open çalışmayabilir, bu yüzden location.href kullanıyoruz
-          window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
-        } else {
-          const newWindow = window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
-          if (!newWindow) {
-            window.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
-          }
-        }
-        setShouldRedirect(false);
+        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
       }, 1200);
       return () => clearTimeout(timer);
     }
-  }, [showFeedback, shouldRedirect]);
+  }, [showFeedback]);
 
   return (
     <div className="bg-gray-50 p-8">
@@ -50,9 +37,11 @@ function Rating() {
                   type="button"
                   className={`text-3xl cursor-pointer transition-all duration-200 ${
                     (hover || rating) >= star ? 'text-yellow-500' : 'text-gray-300'
-                  } hover:scale-125 active:scale-110 focus:outline-none`}
+                  } hover:scale-125 focus:outline-none`}
                   onMouseEnter={() => setHover(star)}
                   onMouseLeave={() => setHover(0)}
+                  onTouchStart={() => setHover(star)}
+                  onTouchEnd={() => setHover(0)}
                   onClick={() => handleRating(star)}
                   aria-label={`Rate ${star} star${star !== 1 ? 's' : ''}`}
                 >
@@ -65,18 +54,18 @@ function Rating() {
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-xl animate-slide-up">
             <div className="animate-float mb-3">
               <div className="w-9 h-9 bg-green-600 rounded-full flex items-center justify-center">
-                <svg 
-                  className="w-6 h-6 text-white" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={4} 
-                    d="M5 13l4 4L19 7" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={4}
+                    d="M5 13l4 4L19 7"
                   />
                 </svg>
               </div>
@@ -98,7 +87,8 @@ function Rating() {
           }
         }
         @keyframes float {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {
