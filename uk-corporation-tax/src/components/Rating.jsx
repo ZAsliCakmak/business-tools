@@ -9,22 +9,22 @@ function Rating() {
     setRating(star);
     setShowFeedback(true);
 
-    // Tarayıcı tespiti
+   
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     const isOnlySafariOnIOS = isIOS && isSafari;
 
-    // Trustpilot'a yönlendirme fonksiyonu
+    
     const redirect = () => {
       window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
     };
 
     if (isOnlySafariOnIOS) {
-      redirect(); // Safari + iOS → hemen yönlendir
+      redirect(); 
     } else if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      setTimeout(redirect, 1200); // Diğer mobil tarayıcılar → 1200ms bekle
+      setTimeout(redirect, 1200); 
     } else {
-      setTimeout(redirect, 1200); // Masaüstü → 1200ms bekle
+      setTimeout(redirect, 1200); 
     }
   };
 
