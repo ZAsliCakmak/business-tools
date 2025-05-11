@@ -3,11 +3,24 @@ import React, { useState } from 'react';
 const Rating = () => {
   const [rated, setRated] = useState(false);
   const [hovered, setHovered] = useState(0);
+  const [selected, setSelected] = useState(0);
+
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const handleClick = (value) => {
     if (!rated) {
+      setSelected(value);
       setRated(true);
-      setTimeout(() => window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank'), 1200);
+      
+      if (isSafari) {
+        // Safari için doğrudan aç
+        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+      } else {
+        // Diğer tarayıcılar için bekleme süresi ekle
+        setTimeout(() => {
+          window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+        }, 1200);
+      }
     }
   };
 
@@ -24,7 +37,7 @@ const Rating = () => {
               <button
                 key={i}
                 className={`text-3xl p-1 rounded-full transition-all duration-200 focus:outline-none ${
-                  rated || hovered >= i ? 'text-yellow-500 scale-125' : 'text-gray-300'
+                  rated || hovered >= i || selected >= i ? 'text-yellow-500 scale-125' : 'text-gray-300'
                 } focus-visible:ring-2 focus-visible:ring-yellow-500 active:ring-2 active:ring-yellow-500`}
                 onMouseEnter={() => !rated && setHovered(i)}
                 onMouseLeave={() => !rated && setHovered(0)}
@@ -37,7 +50,7 @@ const Rating = () => {
         </div>
 
         <div className={`absolute inset-0 flex flex-col items-center justify-center bg-white rounded-xl transition-all duration-300 ${rated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'}`}>
-          <div className= "bg-green-600 rounded-full flex items-center justify-center w-9 h-9 animate-[gentleBounce_1s_ease-in-out_infinite]">
+          <div className="bg-green-600 rounded-full flex items-center justify-center w-9 h-9 animate-[gentleBounce_1s_ease-in-out_infinite]">
             <svg 
               className="w-6 h-6 text-white" 
               fill="none" 
