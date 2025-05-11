@@ -4,8 +4,9 @@ const Rating = () => {
   const [rated, setRated] = useState(false);
   const [hovered, setHovered] = useState(0);
   const [selected, setSelected] = useState(0);
-  const [touched, setTouched] = useState(0); // Dokunma durumu için yeni state
+  const [touched, setTouched] = useState(0);
 
+  
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const handleClick = (value) => {
@@ -14,8 +15,13 @@ const Rating = () => {
       setRated(true);
       
       if (isSafari) {
-        window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
+   
+        const newWindow = window.open('about:blank', '_blank');
+        if (newWindow) {
+          newWindow.location.href = 'https://www.trustpilot.com/evaluate/startxpress.io';
+        }
       } else {
+       
         setTimeout(() => {
           window.open('https://www.trustpilot.com/evaluate/startxpress.io', '_blank');
         }, 1200);
@@ -41,20 +47,9 @@ const Rating = () => {
                 onMouseEnter={() => !rated && setHovered(i)}
                 onMouseLeave={() => !rated && setHovered(0)}
                 onClick={() => handleClick(i)}
-                onTouchStart={() => {
-                  if (!rated) {
-                    setTouched(i);
-                    setHovered(i); // Mobilde hover efekti için
-                  }
-                }}
-                onTouchEnd={() => {
-                  setTouched(0);
-                  setHovered(0);
-                }}
-                onTouchCancel={() => {
-                  setTouched(0);
-                  setHovered(0);
-                }}
+                onTouchStart={() => !rated && setTouched(i)}
+                onTouchEnd={() => setTouched(0)}
+                onTouchCancel={() => setTouched(0)}
               >
                 ★
               </button>
